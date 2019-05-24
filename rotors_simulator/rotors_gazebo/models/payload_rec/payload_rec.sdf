@@ -18,7 +18,7 @@
             <iyz>0</iyz>
             <izz>0.0370</izz>
           </inertia>
-          <mass>0.2</mass>
+          <mass>0.5</mass>
         </inertial>
 
         <collision name="my_collision">
@@ -28,7 +28,7 @@
              </box>
             </geometry>
 
-        </collision>
+        </collision>z
 
         <visual name="my_visual">
             <geometry>
@@ -184,11 +184,11 @@
           </geometry>
         </visual>
       </link>
-<joint name="payload_link_joint1" type="ball">
+<joint name="payload_link_joint1" type="revolute2">
       <parent>payload::payload_rec</parent>
       <child>payload::payload_link1</child>
       <pose>-0.00 0.0 0.1 0 0.0 0.0</pose>
-<!--
+
       <axis>
         <xyz>1 0 0</xyz>
 		<dynamics>
@@ -206,7 +206,7 @@
 		</dynamics>	
 	
       </axis2>
--->
+
 	 <physics>
 	 <ode>
 	 <provide_feedback>true</provide_feedback>
@@ -304,11 +304,11 @@
           </geometry>
         </visual>
       </link>
-<joint name="payload_link_joint3" type="ball">
+<joint name="payload_link_joint3" type="revolute2">
       <parent>payload::payload_rec</parent>
       <child>payload::payload_link2</child>
       <pose>-0.00 0.0 0.1 0 0.0 0.0</pose>
-<!--
+
       <axis>
         <xyz>1 0 0</xyz>
 		<dynamics>
@@ -326,7 +326,7 @@
 		</dynamics>	
 	
       </axis2>
--->
+
 	 <physics>
 	 <ode>
 	 <provide_feedback>true</provide_feedback>
