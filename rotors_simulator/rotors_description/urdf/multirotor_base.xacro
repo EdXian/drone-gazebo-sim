@@ -142,5 +142,30 @@
     <gazebo reference="${robot_namespace}/rotor_${motor_number}">
       <material>Gazebo/${color}</material>
     </gazebo>
+
+
+<gazebo reference="${robot_namespace}/rotor_${motor_number}_joint">
+
+     <provideFeedback>true</provideFeedback>
+
+   </gazebo>
+
+
+<gazebo>
+   <plugin name="ft_sensor_2" filename="libgazebo_ros_ft_sensor.so">
+       <updateRate>100.0</updateRate>
+       <topicName>${robot_namespace}/rotor_${motor_number}_ft</topicName>
+       <jointName>${robot_namespace}/rotor_${motor_number}_joint</jointName>
+   </plugin>
+</gazebo>
+
+
+   <gazebo reference="rotor_${motor_number}">
+     <material>Gazebo/${color}</material>
+   </gazebo>
+
+
+
+
   </xacro:macro>
 </robot>

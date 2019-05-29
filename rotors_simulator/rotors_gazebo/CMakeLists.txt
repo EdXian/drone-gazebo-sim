@@ -64,9 +64,9 @@ add_executable(waypoint_publisher_file src/waypoint_publisher_file.cpp)
 target_link_libraries(waypoint_publisher_file ${catkin_LIBRARIES})
 add_dependencies(waypoint_publisher_file ${catkin_EXPORTED_TARGETS})
 
-add_executable(apply_wrench src/apply_wrench.cpp)
-target_link_libraries(apply_wrench ${catkin_LIBRARIES})
-add_dependencies(apply_wrench ${catkin_EXPORTED_TARGETS})
+#add_executable(apply_wrench src/apply_wrench.cpp)
+#target_link_libraries(apply_wrench ${catkin_LIBRARIES})
+#add_dependencies(apply_wrench ${catkin_EXPORTED_TARGETS})
 
 
 add_executable(hovering_example src/hovering_example.cpp)
