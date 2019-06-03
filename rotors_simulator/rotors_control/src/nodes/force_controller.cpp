@@ -1,22 +1,14 @@
-/*
- * Copyright 2015 Fadri Furrer, ASL, ETH Zurich, Switzerland
- * Copyright 2015 Michael Burri, ASL, ETH Zurich, Switzerland
- * Copyright 2015 Mina Kamel, ASL, ETH Zurich, Switzerland
- * Copyright 2015 Janosch Nikolic, ASL, ETH Zurich, Switzerland
- * Copyright 2015 Markus Achtelik, ASL, ETH Zurich, Switzerland
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
+#include <ros/ros.h>
+#include <mav_msgs/default_topics.h>
 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+//#include "lee_position_controller_node.h"
+
+#include "rotors_control/parameters_ros.h"
+
+#include "force_controller_node.h"
+
+
+
 
 #include <ros/ros.h>
 #include <mav_msgs/default_topics.h>
@@ -27,7 +19,7 @@
 
 namespace rotors_control {
 
-LeePositionControllerNode::LeePositionControllerNode(
+force_controller_node::force_controller_node(
   const ros::NodeHandle& nh, const ros::NodeHandle& private_nh)
   :nh_(nh),
    private_nh_(private_nh){
@@ -35,25 +27,25 @@ LeePositionControllerNode::LeePositionControllerNode(
 
   cmd_pose_sub_ = nh_.subscribe(
       mav_msgs::default_topics::COMMAND_POSE, 1,
-      &LeePositionControllerNode::CommandPoseCallback, this);
+      &force_controller_node::CommandPoseCallback, this);
 
   cmd_multi_dof_joint_trajectory_sub_ = nh_.subscribe(
       mav_msgs::default_topics::COMMAND_TRAJECTORY, 1,
-      &LeePositionControllerNode::MultiDofJointTrajectoryCallback, this);
+      &force_controller_node::MultiDofJointTrajectoryCallback, this);
 
   odometry_sub_ = nh_.subscribe(mav_msgs::default_topics::ODOMETRY, 1,
-                               &LeePositionControllerNode::OdometryCallback, this);
+                               &force_controller_node::OdometryCallback, this);
 
   motor_velocity_reference_pub_ = nh_.advertise<mav_msgs::Actuators>(
       mav_msgs::default_topics::COMMAND_ACTUATORS, 1);
 
-  command_timer_ = nh_.createTimer(ros::Duration(0), &LeePositionControllerNode::TimedCommandCallback, this,
+  command_timer_ = nh_.createTimer(ros::Duration(0), &force_controller_node::TimedCommandCallback, this,
                                   true, false);
 }
 
-LeePositionControllerNode::~LeePositionControllerNode() { }
+force_controller_node::~force_controller_node() { }
 
-void LeePositionControllerNode::InitializeParams() {
+void force_controller_node::InitializeParams() {
 
   // Read parameters from rosparam.
   GetRosParameter(private_nh_, "position_gain/x",
@@ -95,10 +87,10 @@ void LeePositionControllerNode::InitializeParams() {
   GetVehicleParameters(private_nh_, &lee_position_controller_.vehicle_parameters_);
   lee_position_controller_.InitializeParameters();
 }
-void LeePositionControllerNode::Publish() {
+void force_controller_node::Publish() {
 }
 
-void LeePositionControllerNode::CommandPoseCallback(
+void force_controller_node::CommandPoseCallback(
     const geometry_msgs::PoseStampedConstPtr& pose_msg) {
   // Clear all pending commands.
   command_timer_.stop();
@@ -106,15 +98,14 @@ void LeePositionControllerNode::CommandPoseCallback(
   command_waiting_times_.clear();
 
   mav_msgs::EigenTrajectoryPoint eigen_reference;
-  //put pose_msg data into eigen_reference
   mav_msgs::eigenTrajectoryPointFromPoseMsg(*pose_msg, &eigen_reference);
   commands_.push_front(eigen_reference);
-  //change the pose_cmd to force_cmd.
+
   lee_position_controller_.SetTrajectoryPoint(commands_.front());
   commands_.pop_front();
 }
 
-void LeePositionControllerNode::MultiDofJointTrajectoryCallback(
+void force_controller_node::MultiDofJointTrajectoryCallback(
     const trajectory_msgs::MultiDOFJointTrajectoryConstPtr& msg) {
   // Clear all pending commands.
   command_timer_.stop();
@@ -153,7 +144,7 @@ void LeePositionControllerNode::MultiDofJointTrajectoryCallback(
   }
 }
 
-void LeePositionControllerNode::TimedCommandCallback(const ros::TimerEvent& e) {
+void force_controller_node::TimedCommandCallback(const ros::TimerEvent& e) {
 
   if(commands_.empty()){
     ROS_WARN("Commands empty, this should not happen here");
@@ -171,7 +162,7 @@ void LeePositionControllerNode::TimedCommandCallback(const ros::TimerEvent& e) {
   }
 }
 
-void LeePositionControllerNode::OdometryCallback(const nav_msgs::OdometryConstPtr& odometry_msg) {
+void force_controller_node::OdometryCallback(const nav_msgs::OdometryConstPtr& odometry_msg) {
 
   ROS_INFO_ONCE("LeePositionController got first odometry message.");
 
@@ -195,14 +186,15 @@ void LeePositionControllerNode::OdometryCallback(const nav_msgs::OdometryConstPt
 
 }
 
-int main(int argc, char** argv) {
-  ros::init(argc, argv, "lee_position_controller_node");
+int main(int argc, char **argv)
+{
+    ros::init(argc, argv, "lee_position_controller_node");
 
-  ros::NodeHandle nh;
-  ros::NodeHandle private_nh("~");
-  rotors_control::LeePositionControllerNode lee_position_controller_node(nh, private_nh);
+    ros::NodeHandle nh;
+    ros::NodeHandle private_nh("~");
+    //rotors_control::force_controller_node lee_position_controller_node(nh, private_nh);
+    rotors_control::force_controller_node force_controller_node(nh,private_nh);
+    ros::spin();
 
-  ros::spin();
-
-  return 0;
+    return 0;
 }

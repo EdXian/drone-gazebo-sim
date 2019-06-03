@@ -131,7 +131,7 @@
           <geometry>
             <cylinder>
               <radius>0.0005</radius>
-              <length>0.2</length>
+              <length>0.1</length>
             </cylinder>
           </geometry>
 	  <surface>
@@ -147,13 +147,13 @@
           <geometry>
             <cylinder>
               <radius>0.005</radius>
-              <length>0.2</length>
+              <length>0.1</length>
             </cylinder>
           </geometry>
         </visual>
       </link>
 <link name="payload_link1_box">
-        <pose>-0.80 0.0  0.005 0.0 0  0</pose>
+        <pose>-0.70 0.0  0.005 0.0 0  0</pose>
 	<gravity>1</gravity>
 		 <inertial>
           <inertia>
@@ -192,8 +192,8 @@
       <axis>
         <xyz>1 0 0</xyz>
 		<dynamics>
-		<damping> 0.1 </damping>
-		<spring_stiffness> 0.05 </spring_stiffness>
+                <damping> 5.0 </damping>
+                <spring_stiffness> 0.05 </spring_stiffness>
 		</dynamics>
 
       </axis>
@@ -201,8 +201,8 @@
       <axis2>
         <xyz>0 1 0</xyz>
 		<dynamics>
-		<damping> 0.1 </damping>
-		<spring_stiffness> 0.05 </spring_stiffness>
+                <damping> 5.0 </damping>
+                <spring_stiffness> 0.05 </spring_stiffness>
 		</dynamics>	
 	
       </axis2>
@@ -250,7 +250,7 @@
           <geometry>
             <cylinder>
               <radius>0.0005</radius>
-              <length>0.2</length>
+              <length>0.1</length>
             </cylinder>
           </geometry>
 
@@ -266,13 +266,13 @@
           <geometry>
             <cylinder>
               <radius>0.005</radius>
-              <length>0.2</length>
+              <length>0.1</length>
             </cylinder>
           </geometry>
         </visual>
       </link>
 <link name="payload_link2_box">
-        <pose>0.80 0.0  0.005 0 0.0 0</pose>
+        <pose>0.70 0.0  0.005 0 0.0 0</pose>
 	<gravity>1</gravity>
 		 <inertial>
           <inertia>
@@ -312,8 +312,8 @@
       <axis>
         <xyz>1 0 0</xyz>
 		<dynamics>
-		<damping> 0.1 </damping>
-		<spring_stiffness> 0.05 </spring_stiffness>
+                <damping> 5.0 </damping>
+                <spring_stiffness> 0.05 </spring_stiffness>
 		</dynamics>
 
       </axis>
@@ -321,8 +321,8 @@
       <axis2>
         <xyz>0 1 0</xyz>
 		<dynamics>
-		<damping> 0.1 </damping>
-		<spring_stiffness> 0.05 </spring_stiffness>
+                <damping> 5.0 </damping>
+                <spring_stiffness> 0.05 </spring_stiffness>
 		</dynamics>	
 	
       </axis2>

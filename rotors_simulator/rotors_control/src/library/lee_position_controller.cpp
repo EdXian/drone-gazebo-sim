@@ -87,6 +87,7 @@ void LeePositionController::SetOdometry(const EigenOdometry& odometry) {
 
 void LeePositionController::SetTrajectoryPoint(
     const mav_msgs::EigenTrajectoryPoint& command_trajectory) {
+  //replace posestamped with force
   command_trajectory_ = command_trajectory;
   controller_active_ = true;
 }
@@ -95,7 +96,7 @@ void LeePositionController::ComputeDesiredAcceleration(Eigen::Vector3d* accelera
   assert(acceleration);
 
   Eigen::Vector3d position_error;
-  position_error = odometry_.position - command_trajectory_.position_W;
+  position_error = odometry_.position - command_trajectory_.position_W;  // ignore
 
   // Transform velocity to world frame.
   const Eigen::Matrix3d R_W_I = odometry_.orientation.toRotationMatrix();
@@ -104,10 +105,17 @@ void LeePositionController::ComputeDesiredAcceleration(Eigen::Vector3d* accelera
   velocity_error = velocity_W - command_trajectory_.velocity_W;
 
   Eigen::Vector3d e_3(Eigen::Vector3d::UnitZ());
+    //connect the desired force with the acceleration command
 
+  *acceleration =  -command_trajectory_.position_W/ vehicle_parameters_.mass_   //desired force
+      - vehicle_parameters_.gravity_ * e_3 + Eigen::Vector3d(0,0,0) ; //command_trajectory_.acceleration_W;
+    //std::cout << acceleration->transpose()<<std::endl;
+
+  /*
   *acceleration = (position_error.cwiseProduct(controller_parameters_.position_gain_)
       + velocity_error.cwiseProduct(controller_parameters_.velocity_gain_)) / vehicle_parameters_.mass_
       - vehicle_parameters_.gravity_ * e_3 - command_trajectory_.acceleration_W;
+  */
 }
 
 // Implementation from the T. Lee et al. paper
